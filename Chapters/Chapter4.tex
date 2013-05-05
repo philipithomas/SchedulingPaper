@@ -1,21 +1,69 @@
 \chapter{Implementation and Results}
 
+
+\section{Constraints}
+All of the constraints described formulated as hard constraints. 
+
+Equation \eqref{availability} ensures that the employee availability spans the required employees.
+
+Equation \eqref{daylimit} limits every employee to 2 shifts per 24-hour period. This constraint formulates the boundaries of the beginning and end of the week as cyclical, such that if the schedule were repeated every week, an employee would not exceed 2 shifts in a 24-hour period. 
+
+Equation \eqref{employeeshifts} ensures that every employee works between their minimum and maximum shifts per week, inclusive.
+
+Equation \eqref{preference} ensures that an employee may only have a "preferred" shift if they are available to work that shift. 
+
+\section{Excel Implementation}
+A working implementation in Excel using the Solver package is available for download at the project website:
+$$http://students.cec.wustl.edu/\sim pit1/$$
+
+The implementation is designed so that it may be calculated using the standard Excel Solver package. It schedules 4 employees over a 72-hour period with cyclical constraints. 
+
+With 72 decision variables and 98 constraints, the problem successfully optimizes the model using a GRG Nonlinear engine. 
+
+Based on tests, the scheduler takes between 1 and 120 minutes to optimize this model. 
+
+\section{Runtime}
+
+A BIP model is classified as an NP-Complete problem, which is among the most computationally-difficult models to optimize. The runtimes encountered in the above implementation had such varying run times because BIP models run in nondeterministic polynomial time. 
+
+Scaling the model for more employees requires significant computational power and an improved solver library. For an implementation with 13 employees and 42 shifts, there are $2^{546}$ possible boolean matrices, which is over $10^{164}$ solutions. Hence, an efficient solving package is required.
+
 \section{Heuristic}
 
-\section{Algorithm}
+Based on tests with the model, the most efficient way to decrease runtime was to use a version of a greedy heuristic. This was implemented by using the availability matrix as the first iteration of the BIP model. By starting the model as assuming that every employee is scheduled for every shift when they are available, the availability constraint is immediately satisfied, and the algorithm seems to decrease runtime by moving toward feasibility more efficiently. 
 
-\section{Matlab}
+Tests with the linear programming relaxation technique to determine a first iteration for the BIP model had varying levels of effectiveness. When the $\alpha$ value was zero, the model seemed to create an initial solution similar to the greedy heuristic. However, at high $\alpha$ values, such high weight placed on particular shifts made the initial solution by the linear programming relaxation highly infeasible do to so few shifts being assigned. 
 
-See appendix A?
+In real-world implementation, the greedy heuristic seems to provide the best first iteration solution in terms of runtime due to the meeting the availability constraint and providing a near-feasible first iteration. 
 
 \section{Motivating Example Solution}
 
-\section{Time Complexity}
+The algorithm formulated in this paper fulfills all of the parameters outlined by the Motivating Example in Section (1.3).  
 
 \section{Alterations}
-Availability as a soft constraint
+
+One main alteration that is possible in this model is making the employee availability constraint, \eqref{availability}, a soft constraint instead of a hard one. Thus, employees could be scheduled when they are unavailable. 
+
+By making this a soft constraint, employees would be unlikely to be scheduled when they are unavailable because the shift would add no value to the objective function. However, in edge cases where not enough employees are available to work at a particular shift, the model would still return a schedule instead of encountering a feasibility error. 
+
+In a real-world implementation, minimizing errors and forcing the return of a schedule would allow managers to make hand corrections after the creation of the schedule, instead of being forced to have all constraints met to use the program. 
+
 \section{Model Improvements}
 
-\section{Examples}
+The model would benefit from the addition of a constaint limiting time between shifts. The current model limits employees to two 4-hour shifts during every 24-hour period. However, it does not limit that those shifts be contiguous - hence, an employee could conceivably have 8-hour brakes between 4-hour shifts for multiple days in a row. This is undesirable because it interrupts sleep.
+
+The solution to this is to add a constraint that enforces a minimum time between non-contiguous shifts. However, adding this constraint would be highly inefficient in a BIP model. 
+
+Adding this constraint would be best implemented by re-formulating the model as a mixed integer program where the decision variable contains both a start time and a shift length. 
+
+\section{Implementation}
+
+In a real-world implementation where there exist multiple roles in a workforce, for example having both a cook and a dishwasher who cannot fill each others roles, then the algorithm should be implemented to treat every role in a company as an independent model with independent solutions. 
+
+Due to the low cost and high speed of modern computing, converting this algorithm into a Software as a Service (SaaS) product would be the ideal user interface. The difficulty in a real-world implementation is handling infeasible inputs - for instance, not having enough employees who may work at a particular shift.
+
+Basic scheduling needs are met by the model, and it excels at speed relative to other workforce management algorithms because the only nonlinearity is the binary aspect of the decision variables. However, the next step in a more advanced model is adding contiguity constraints such that there is a minimum break between non-continuous shifts. Such a nonlinear constraint adds significant computational difficulty.
+
+Finally, due to the nondeterministic polynomial runtime of the algorithm and due to the nature of scheduling, the model does not need to be run to completion. Returning a non-optimal but feasible model still satisfies the original problem statement because it automatically generates a schedule that meets all hard constraints, and any improvement over the worst-case scenario still provides recognizeable benefit to management and employees.
 
 

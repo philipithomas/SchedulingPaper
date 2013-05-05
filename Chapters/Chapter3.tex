@@ -72,7 +72,15 @@ $$ \beta_{i} = \alpha_{i} = 0 $$
 Thus, 
 $$ \alpha_{i}*count(\alpha_{i}) +\beta_{i} * count(\beta_{i}) = \sum\limits_{j}Availability_{i,j}$$
 
-The weighted preference matrix 
+The weighted preference matrix is this computed for each i:
+$$ WeightedPreference_{i,j} \begin{cases}
+   0,  Availability_{i,j} = 0\\
+   1 + \alpha,  Availability_{i,j} = 1 \& Preference_{i,j} = 1 \\
+   1 - \beta, Availability_{i,j} = 1 \& Preference_{i,j} = 0\\
+   
+ \end{cases}$$
+
+An implementation of the weighting formula in Matlab is available in Chapter 5.
 
 
 
