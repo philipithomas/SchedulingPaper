@@ -192,20 +192,20 @@
     \vskip 60\p@
     \begin{center}
       \setlength{\parskip}{0pt}
-      {\large\textbf{\UNIVNAME}\par}
+      {\large\textbf{Washington University in St. Louis}\par}
       \vfill
       {\huge \bf \@title \par}
       \vfill
       {\LARGE by \par}
       \smallskip
-      {\LARGE \authornames \par}
+      {\LARGE Philip I. Thomas \par}
       \vfill
       {\large Senior Design Project \par}
       \bigskip
       \bigskip
       {\large Advised By \par}
-      {\large \schaettler \par}
-      {\large \deptname \par}
+      {\large Associate Professor Heinz Schaettler \par}
+      {\large Department of Electrical and Systems Engineering \par}
       \bigskip
       \bigskip
       \bigskip

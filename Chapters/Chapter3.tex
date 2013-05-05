@@ -7,7 +7,8 @@ j: Shift\\
 \subsection{Parameters}
 Employee$_{min,j}$: Minimum employees working at time\\
 Employee$_{max,j}$: Maximum employees working at time\\
-Preference$_{i,j}$: Employee Weighted Shift Preference\\
+Preference$_{i,j}$: Boolean Employee Shift Preference\\
+WeightedPreference$_{i,j}$: Weighted Employee Shift Preference\\
 Availability$_{i,j}$: Boolean employee availability at time\\
 Shift$_{min,i}$: Minimum employee shifts per week\\
 Shift$_{max,i}$: Maximum employee shifts per week
@@ -25,12 +26,18 @@ $$x_{i,j} =
 
 \section{Constraints}
 
-$$\sum\limits_{i} Availability_{i,j} \ge Employee_{min,j}$$
+
+$$\begin{equation}\label{availability} \sum\limits_{i} Availability_{i,j} \ge Employee_{min,j} \end{equation}
+
+$$
 
  For each i: \\
-$$\sum\limits_{j = k}^{k+5} x_{i,( j\bmod{count(j)})} \le 2 $$
+$$ \begin{equation}\label{daylimit}\sum\limits_{j = k}^{k+5} x_{i,( j\bmod{count(j)})} \le 2 \end{equation} $$
 
-$$ Shift_{min,i}\le \sum\limits_{j}x_{i,j} \le Shift_{max,i}$$
+$$ \begin{equation}\label{employeeshifts} Shift_{min,i}\le \sum\limits_{j}x_{i,j} \le Shift_{max,i} \end{equation}$$
+
+
+$$ \begin{equation}\label{preference} Preference_{i,j} =   Preference_{i,j} \cdot Availability_{i,j} \end{equation}$$
 
 
 \section{Employee Shift Weighting}
@@ -38,11 +45,11 @@ The employee preference parameter is created to allow employees to designate shi
 
 The preferences parameter is calculated such that:
 
-$$\sum\limits_{j}Preferences_{i,j} = \sum\limits_{j}Availability_{i,j}$$
+$$\sum\limits_{j}Preference_{i,j} = \sum\limits_{j}Availability_{i,j}$$
 
 Should an employee choose not to specify priority shifts, or if an employee chooses to prioritize all shifts, the preference matrix should thus be equally weighted, and equal to the availability parameter:
 
-$$Preferences_{i,j} = Availability_{i,j}$$
+$$Preference_{i,j} = Availability_{i,j}$$
 
 Based on the objective function, priority shifts are upweighted, and based on the specified constraints the non-priority shifts must be downweighted. The upweighting factor is designated as $\alpha$ and the downweighting factor is designated as $\beta$. 
 
@@ -53,11 +60,11 @@ Thus, in this case: $$\alpha = 3\beta$$
 
 Clearly, $\beta$ must always be less than one. However, we also consider that employees who specify only a single priority shift have more weight placed on that shift than someone who prioritizes all but one shift.  We specify that a prioritized shift may be no more than twice as weighted as a non-weighted shift, thus $\alpha<1$.
 
-$$\alpha_{i} = \frac{count(\beta)}{\sum\limits_{j}Availability_{i,j}}$$
+$$\alpha_{i} = \frac{\sum\limits_{j}Availability_{i,j} - \sum\limits_{j}Preference_{i,j}}{\sum\limits_{j}Availability_{i,j}}$$
 
 Thus,
 
-$$\beta_{i} = \alpha \frac{count(\alpha)}{count(\beta)}$$
+$$\beta_{i} = \alpha \frac{\sum\limits_{j}Preference_{i,j}}{\sum\limits_{j}Availability_{i,j} - \sum\limits_{j}Preference_{i,j}}$$
 
 In addition, if $count(\beta_{i})=0$ or $count(\alpha_{i})=0$,
 $$ \beta_{i} = \alpha_{i} = 0 $$ 
@@ -65,9 +72,59 @@ $$ \beta_{i} = \alpha_{i} = 0 $$
 Thus, 
 $$ \alpha_{i}*count(\alpha_{i}) +\beta_{i} * count(\beta_{i}) = \sum\limits_{j}Availability_{i,j}$$
 
+The weighted preference matrix 
+
+\begin{verbatim}
+function [ weighted_preferences ] = weighted_shifts( availability, preference )
+%WEIGHTED_SHIFTS Returns a weighted shift matrix 
+
+% Get sizes for loops
+[num_employees num_shifts ] = size( availability );
+% Initialize matrix by copying availability 
+weighted_preference = availability;
+
+% Loop through each employee
+for i = 1:num_employees
+
+    % Count how many shifts they are available, and how many 
+	% they prefer
+	num_available = sum( availability(i,:) );
+	num_preferred = sum( preference( i,: ) );
+
+	if ( num_preferred == 0 ) || ( num_preferred == num_available )
+		% If they do not prefer any shifts, or if they prefer every shift
+		% The availability matrix weighting is correct (all 1s)
+	else 
+		% we upweights and downweights based on number of preferred shifts 
+
+		% upweight calculation
+		alpha = ( num_available - num_preferred ) / num_available;
+		
+		% downweight calculation
+		beta = alpha * num_preferred / ( num_available - num_preferred );
+		
+		% Loop through shifts and set weight
+		for j = 1:num_shifts
+			if availability( i , j ) == 1 && preference( i , j ) == 1
+				% upweight shift
+				weighted_preference( i , j ) = 1 + alpha;
+			elseif availability( i , j ) == 1 && preference( i , j ) == 0
+				% downweight shift
+				weighted_preference( i , j ) = 1 - beta;
+			else
+				% Already zero weight due to availability matrix
+				% weighted_preference( i , j ) = 0;
+			end
+		end
+	end
+end
+
+
+end
+
+\end{verbatim}
 
 \section{Objective Function}
 
-$$ max~Z = \sum\limits_{i,j} x_{i,j} \cdot Preferences_{i,j}$$
+$$ max~Z = \sum\limits_{i,j} x_{i,j} \cdot WeightedPreference_{i,j}$$
 
-\section{Finalized Problem}

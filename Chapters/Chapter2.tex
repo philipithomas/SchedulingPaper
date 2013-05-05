@@ -1,6 +1,6 @@
 \chapter{Approach}
 \section{Proposed Model}
-A modified scheduling algorithm is proposed that optimizes for employee satisfaction instead minimizing cost. In the setting of small and medium-sized businesses, improvements in morale may more tangible than the labor costs saved.
+A modified scheduling algorithm is proposed that optimizes for employee satisfaction instead of minimizing cost. In the setting of small and medium-sized businesses, improvements in morale may more tangible than the labor costs saved.
 
 Current workforce scheduling algorithms gain these cost savings by scheduling employees down to 15-minute discrete resolution, including breaks. Per the motivating example, the workforces targeted by this algorithm do not require such precise scheduling. Instead, they seek a more basic interface that schedules employees in 4-hour blocks. 
 
@@ -22,9 +22,13 @@ A feasible solution of the model treats employee availability, work limits, numb
 
 \section{Model Design}
 
-A binary integer programming (BIP) model was selected because of the discrete nature of the shifts. Other scheduling algorithms have been implemented as mixed integer programs, but those models have focuses on complex shift overlaps between employees. Because employees in this model work in integral shifts with no overlap, such an approach is unnecessary. 
+A binary integer programming (BIP) model was selected because of the discrete nature of the shifts. Other scheduling algorithms have been implemented as mixed integer programs, but those models have focuses on complex shift overlaps between employees. Because employees in this model work in integral numbers of shifts with no overlap, such an model does not apply.
 
-Algorithms for BIP problems are common 
+Due to the nondeterministic time complexity of a BIP algorithm, heuristics serve an important role in providing quick runtimes and reaching feasibility. By making the decision variable have the same indices as the availability or preference inputs, heuristics for the first iteration based on these inputs are possible. 
+
+While the BIP model is nonlinear, removing the binary constraint on the decision variable and runing it into a continuous 0-1 interval constraint makes the problem linear. Thus, a linear programming relaxation constraint may be used to generate the first BIP iteration. Specically, using the Simplex algorithm to solve the linear program, then rounding the continouous variables to discrete binary variables for the first interval provides a solution that is a reasonable first approximation for a feasible solution of the BIP model. The marginal effect on overall runtime by adding the linear programming relaxation is trivial due to the polynomial runtime of the Simplex algorithm.  
+
+A variety of algorithms for solving BIP models have been commercially implemented in a variety of software packages. In general, the NP-Complete classification of BIP problems means that runtimes are nondeterministic and computationally difficult.
 
 \section{Implementation}
 
@@ -38,6 +42,9 @@ Finally, employers configure employees and working standards. Specifically, cons
 
 \section{Usage}
 
+Constraints in the model are designed so that the schedule is to be repeated every week to comply with labor parameters. Specifically, when considering that the number of shifts an employee may work in a 24-hour period is limited, the first 24 hours of the week and the last 24 hours of the week are considered to share a boundary, such that if the schedule were repeated every week, work limit parameters would satisfied. 
+
+If employee availability and preferences changes on a week-by-week basis, the employee availability matrix may be used to manually enforce worktime parameters without additional modifications to the model. For instance, if the prior workweek ended with three consecutive shifts for a particular employee, they could be marked as "unavailable" for the first 3 shifts of the proceeding week such that they do not exceed the number of allowed shifts in a 24-hour period.  
 
 
 
