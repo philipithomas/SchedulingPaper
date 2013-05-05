@@ -74,55 +74,7 @@ $$ \alpha_{i}*count(\alpha_{i}) +\beta_{i} * count(\beta_{i}) = \sum\limits_{j}A
 
 The weighted preference matrix 
 
-\begin{verbatim}
-function [ weighted_preferences ] = weighted_shifts( availability, preference )
-%WEIGHTED_SHIFTS Returns a weighted shift matrix 
 
-% Get sizes for loops
-[num_employees num_shifts ] = size( availability );
-% Initialize matrix by copying availability 
-weighted_preference = availability;
-
-% Loop through each employee
-for i = 1:num_employees
-
-    % Count how many shifts they are available, and how many 
-	% they prefer
-	num_available = sum( availability(i,:) );
-	num_preferred = sum( preference( i,: ) );
-
-	if ( num_preferred == 0 ) || ( num_preferred == num_available )
-		% If they do not prefer any shifts, or if they prefer every shift
-		% The availability matrix weighting is correct (all 1s)
-	else 
-		% we upweights and downweights based on number of preferred shifts 
-
-		% upweight calculation
-		alpha = ( num_available - num_preferred ) / num_available;
-		
-		% downweight calculation
-		beta = alpha * num_preferred / ( num_available - num_preferred );
-		
-		% Loop through shifts and set weight
-		for j = 1:num_shifts
-			if availability( i , j ) == 1 && preference( i , j ) == 1
-				% upweight shift
-				weighted_preference( i , j ) = 1 + alpha;
-			elseif availability( i , j ) == 1 && preference( i , j ) == 0
-				% downweight shift
-				weighted_preference( i , j ) = 1 - beta;
-			else
-				% Already zero weight due to availability matrix
-				% weighted_preference( i , j ) = 0;
-			end
-		end
-	end
-end
-
-
-end
-
-\end{verbatim}
 
 \section{Objective Function}
 
