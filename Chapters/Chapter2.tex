@@ -1,0 +1,46 @@
+\chapter{Approach}
+\section{Proposed Model}
+A modified scheduling algorithm is proposed that optimizes for employee satisfaction instead minimizing cost. In the setting of small and medium-sized businesses, improvements in morale may more tangible than the labor costs saved.
+
+Current workforce scheduling algorithms gain these cost savings by scheduling employees down to 15-minute discrete resolution, including breaks. Per the motivating example, the workforces targeted by this algorithm do not require such precise scheduling. Instead, they seek a more basic interface that schedules employees in 4-hour blocks. 
+
+In addition to the minimum employees working per hour that current models  provide, the proposed new model sets a maximum constraint. After specifying availability, they select priority shifts every week. Each shift is assigned a weight on a per-employee basis, based on employee prioritization.
+
+\section{Project Goals}
+
+The goal of this project is to design a scheduling algorithm that takes a 7-day work week and analyzes it as 42 discrete shifts each 4 hours in length. 
+
+The manager sets how many employees are required at each shift throughout the week. If the business is closed, then 0 employees are required. Note, however, that the model should function for a business that never closes. 
+
+The manager also specifies the minimum and maximum shifts each employee must work each week. For instance, if a manager wish to keep someone from exceeding 30 hours of work per week, they specify a maximum of 6 shifts per week (28 hours).
+
+Each employee may set their availability by specifying a boolean "available to work" or "unavailable to work" for every shift throughout the week. Then, they are provided with the option to set boolean "preferred shift" or "no preference" for every shift where they are available to work. 
+
+To comply with basic labor practices, the model also implements a limit on the number of shifts an employee may work per day. This is may be specifed by the manager, but in general may be treated as 2 shifts (8 hours) per day. 
+
+A feasible solution of the model treats employee availability, work limits, number of employees working per shift, and shifts per 24-hour segment as hard constraints. The objective function seeks to maximize the placement of employees in shifts based on preference.
+
+\section{Model Design}
+
+A binary integer programming (BIP) model was selected because of the discrete nature of the shifts. Other scheduling algorithms have been implemented as mixed integer programs, but those models have focuses on complex shift overlaps between employees. Because employees in this model work in integral shifts with no overlap, such an approach is unnecessary. 
+
+Algorithms for BIP problems are common 
+
+\section{Implementation}
+
+This model is best used in a Software as a Service web platform, where employers are able to manage parameters and employees are able to provide the necessary input. 
+
+First, employers configure the workweek and anticipated load in the system. The minimum and maximum employees per shift are set, with a maximum of 0 meaning that the business is closed. 
+
+Separate models are needed for each role. For instance, separate models are needed for cooks and dishwashers because they are non-overlapping sets.
+
+Finally, employers configure employees and working standards. Specifically, constraints on employee hours are set, and minimum and maximum shift lengths are specified. 
+
+\section{Usage}
+
+
+
+
+
+
+

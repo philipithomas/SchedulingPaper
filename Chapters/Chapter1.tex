@@ -1,0 +1,38 @@
+\chapter{Introduction and Background}
+
+\section{Background}
+Recent healthcare legislation in the United States is affecting workforce management. The Patient Protection and Affordable Care Act defines full-time employees as those who work 30 or more hours per week, on average. Under the legislation, businesses with 50 or more employees are required to provide healthcare benefits to full-time employees, or pay a \$2000 fine \cite{ppaca}. 
+
+This legislative change is causing changes in workforce management. Specifically, the Wall Street Journal  notes that these changes driving employers to schedule more employees with more strict hour requirements \cite{wsj}. Rather than employing more full-time workers, more employers are hiring a larger force of part-time employees for 29-hour workweeks to avoid the  penalty. 
+
+Scheduling more employees with additional constraints increases the difficulty of the problem, and current analog methods are becoming increasingly tedious.
+
+Currently, managers of small workforces schedule employees by hand. In general, their goal is meeting feasibility constraints - scheduling employees when they are available to work. This is a largely subjective process, and there are many possible solutions. 
+
+With the decreasing cost of computers and the rise of software as a service products, business owners are becoming more receptive to technological solutions to common problems. In addition, with the recent \emph{big data} trend, operations research and applied statistics are becoming mainstream. Tools like Google Maps use complex mathematical models, yet have become integrated into everyday lives.
+
+Scheduling is a classic operations research problem. By minimizing employee labor cost, a Binary Integer Programming (BIP) model is often used to place employees in shifts. Constraints such as shift lengths, employee weekly hours, and minimum number of shifts are often considered. 
+
+Corporations such as Taco Bell  use binary or mixed integer programing models \cite{taco} with success to schedule thousands of employees every week. 
+
+Recent trends show the propagation of optimized scheduling techniques to more businesses and organizations.
+
+\section{Existing Models}
+
+Current scheduling models are based on minimizing labor costs. Specifically, every time slot is assigned a minimum number of employees needed to work that shift, and the number of employees working may exceed that minimum due to minimum and maximum shift length constraints.  On a large scale, minimizing employee labor costs provides a quantifiable financial benefit.
+
+\section{Motivating Example}
+
+This project was motivated by a coffee shop that operates 24-hours per day. It already schedules employees in four-hour shifts throughout the week, and employees consist of a mixture of full-time and part-time workers. 
+
+Currently, scheduling is done manually by the manager. Because of the long hours of the shop, employees availability on a weekly basis must be considered. In addition, employees have a strong preference for shift, specifically between night, morning, and afternoon shifts. 
+
+Current scheduling software does not meet the needs of the shop because it aims to minimize employee working hours, and because it treats an employee's preferred shift as a hard constraint. In addition, because the shop has few employees and already schedules in 4-hour shifts, the software package's minimization of labor costs provides little benefit. 
+
+The coffee shop seeks new scheduling software that treats employee preference as a soft constraint, in addition to availability as a hard constraint. When provided with the number of employees required for each shift, and with the availability and preferred shifts of each employee, it should return a suitable work schedule. Constraints such as shifts per week and number of shifts per day should be considered. Furthermore, employees who choose not to prioritize shifts should not be penalized during scheduling. 
+
+
+
+\section{Problem Statement}
+%------------------------------------------------
+Design an algorithm that automates workforce scheduling in a way that provides a recognizeable benefit for smaller workforces where current cost-saving optimizations are less applicable. 

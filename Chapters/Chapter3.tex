@@ -1,0 +1,73 @@
+\chapter{Model}
+
+\subsection{Indices}
+i: Employee\\
+j: Shift\\
+
+\subsection{Parameters}
+Employee$_{min,j}$: Minimum employees working at time\\
+Employee$_{max,j}$: Maximum employees working at time\\
+Preference$_{i,j}$: Employee Weighted Shift Preference\\
+Availability$_{i,j}$: Boolean employee availability at time\\
+Shift$_{min,i}$: Minimum employee shifts per week\\
+Shift$_{max,i}$: Maximum employee shifts per week
+
+\subsection{Decision Variable}
+1 if employee i is scheduled to work shift j; 0 otherwise.
+$$x_{i,j} =
+ \begin{cases}
+   1 \\
+   0 
+   
+ \end{cases}
+ $$
+%------------------------------------------------
+
+\section{Constraints}
+
+$$\sum\limits_{i} Availability_{i,j} \ge Employee_{min,j}$$
+
+ For each i: \\
+$$\sum\limits_{j = k}^{k+5} x_{i,( j\bmod{count(j)})} \le 2 $$
+
+$$ Shift_{min,i}\le \sum\limits_{j}x_{i,j} \le Shift_{max,i}$$
+
+
+\section{Employee Shift Weighting}
+The employee preference parameter is created to allow employees to designate shifts they prefer. The model then optimizes to give employees the shifts they desire. 
+
+The preferences parameter is calculated such that:
+
+$$\sum\limits_{j}Preferences_{i,j} = \sum\limits_{j}Availability_{i,j}$$
+
+Should an employee choose not to specify priority shifts, or if an employee chooses to prioritize all shifts, the preference matrix should thus be equally weighted, and equal to the availability parameter:
+
+$$Preferences_{i,j} = Availability_{i,j}$$
+
+Based on the objective function, priority shifts are upweighted, and based on the specified constraints the non-priority shifts must be downweighted. The upweighting factor is designated as $\alpha$ and the downweighting factor is designated as $\beta$. 
+
+Considering j = 4 with one specified priority shift:
+$$ (1 + \alpha) + (1-\beta) + (1-\beta) + (1-\beta) = 4 $$
+
+Thus, in this case: $$\alpha = 3\beta$$
+
+Clearly, $\beta$ must always be less than one. However, we also consider that employees who specify only a single priority shift have more weight placed on that shift than someone who prioritizes all but one shift.  We specify that a prioritized shift may be no more than twice as weighted as a non-weighted shift, thus $\alpha<1$.
+
+$$\alpha_{i} = \frac{count(\beta)}{\sum\limits_{j}Availability_{i,j}}$$
+
+Thus,
+
+$$\beta_{i} = \alpha \frac{count(\alpha)}{count(\beta)}$$
+
+In addition, if $count(\beta_{i})=0$ or $count(\alpha_{i})=0$,
+$$ \beta_{i} = \alpha_{i} = 0 $$ 
+
+Thus, 
+$$ \alpha_{i}*count(\alpha_{i}) +\beta_{i} * count(\beta_{i}) = \sum\limits_{j}Availability_{i,j}$$
+
+
+\section{Objective Function}
+
+$$ max~Z = \sum\limits_{i,j} x_{i,j} \cdot Preferences_{i,j}$$
+
+\section{Finalized Problem}
