@@ -5,13 +5,13 @@ i: Employee\\
 j: Shift\\
 
 \subsection{Parameters}
-Employee$_{min,j}$: Minimum employees working at time\\
-Employee$_{max,j}$: Maximum employees working at time\\
-Preference$_{i,j}$: Boolean Employee Shift Preference\\
-WeightedPreference$_{i,j}$: Weighted Employee Shift Preference\\
-Availability$_{i,j}$: Boolean employee availability at time\\
-Shift$_{min,i}$: Minimum employee shifts per week\\
-Shift$_{max,i}$: Maximum employee shifts per week
+Employee$_{min,j} \in \mathbb{Z}$: Minimum employees working at time\\
+Employee$_{max,j} \in \mathbb{Z}$: Maximum employees working at time\\
+Preference$_{i,j} \in \left\{ { 0 , 1 }\right\}$: Boolean Employee Shift Preference\\
+WeightedPreference$_{i,j} \in \mathbb{R}}$: Weighted Employee Shift Preference\\
+Availability$_{i,j} \in \left\{ { 0 , 1 }\right\}$: Boolean employee availability at time\\
+Shift$_{min,i} \in \mathbb{Z}}$: Minimum employee shifts per week\\
+Shift$_{max,i}\in \mathbb{Z}}$: Maximum employee shifts per week
 
 \subsection{Decision Variable}
 1 if employee i is scheduled to work shift j; 0 otherwise.

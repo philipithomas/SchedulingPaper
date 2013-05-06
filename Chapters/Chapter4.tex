@@ -20,7 +20,7 @@ The implementation is designed so that it may be calculated using the standard E
 
 With 72 decision variables and 98 constraints, the problem successfully optimizes the model using the package's GRG Nonlinear engine. 
 
-Based on tests, the scheduler takes between 1 and 120 minutes to optimize this model. 
+Based on tests, the scheduler normally takes between 1 and 120 minutes to optimize this model. 
 
 \section{Runtime}
 
@@ -47,7 +47,7 @@ In a real-world implementation, minimizing errors and forcing the return of a no
 
 \section{Model Improvements}
 
-The model would benefit from the addition of a constaint limiting time between shifts. The current model limits employees to two 4-hour shifts during every 24-hour period. However, it does not limit that those shifts be contiguous - hence, an employee could conceivably have 8-hour brakes between 4-hour shifts for multiple days in a row. This is undesirable because it interrupts sleep.
+The model would benefit from the addition of a constaint limiting time between shifts. The current model limits employees to two 4-hour shifts during every 24-hour period. However, it does not limit that those shifts be contiguous - hence, an employee could conceivably have 8-hour breaks between 4-hour shifts for multiple days in a row. This is undesirable because it interrupts sleep.
 
 The solution to this is to add a constraint that enforces a minimum time between non-contiguous shifts. However, adding this constraint would be highly inefficient in a BIP model. 
 
@@ -57,7 +57,7 @@ Including this constraint would be best implemented by re-formulating the model 
 
 In a real-world implementation where there exist multiple roles in a workforce, for example having both a cook and a dishwasher who cannot fill each others roles, this algorithm should be implemented to treat every role in a company as an independent model with independent solutions. 
 
-Due to the low cost and high speed of modern computing, converting this algorithm into a Software as a Service (SaaS) product would be the ideal user interface. The difficulty in a real-world implementation is handling infeasible inputs - for instance, not having enough employees who may work at a particular shift.
+Due to the low cost and high speed of modern computing, converting this algorithm into a Software as a Service (SaaS) product would be the ideal user interface, particularly because it makes collecting employee availability and preferencees from the remote workforce easier for the manager.  The difficulty in a real-world implementation is handling infeasible inputs - for instance, not having enough employees who may work at a particular shift.
 
 Basic scheduling needs are met by the model, and it excels at speed relative to other workforce management algorithms because the only nonlinearity is the binary aspect of the decision variables. However, the next step in a more advanced model is adding contiguity constraints such that there is a minimum break between non-continuous shifts. Such a nonlinear constraint adds significant computational difficulty.
 
