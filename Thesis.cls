@@ -201,7 +201,7 @@
       {\LARGE Philip I. Thomas \par}
       \vfill
       {\large Senior Design Project \par}
-      {\large http://students.cec.wustl.edu/\sim pit1/ \par}
+      {\large $http://students.cec.wustl.edu/\sim pit1/ $\par}
       \bigskip
       \bigskip
       {\large Advised By \par}

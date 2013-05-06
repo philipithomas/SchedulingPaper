@@ -1,4 +1,4 @@
-\chapter{Model}
+                  \chapter{Model}
 
 \subsection{Indices}
 i: Employee\\
@@ -15,13 +15,7 @@ Shift$_{max,i}$: Maximum employee shifts per week
 
 \subsection{Decision Variable}
 1 if employee i is scheduled to work shift j; 0 otherwise.
-$$x_{i,j} =
- \begin{cases}
-   1 \\
-   0 
-   
- \end{cases}
- $$
+$$x_{i,j} \in \left\{ { 0 , 1 }\right\} $$
 %------------------------------------------------
 
 \section{Constraints}
@@ -56,7 +50,7 @@ Based on the objective function, priority shifts are upweighted, and based on th
 Considering j = 4 with one specified priority shift:
 $$ (1 + \alpha) + (1-\beta) + (1-\beta) + (1-\beta) = 4 $$
 
-Thus, in this case: $$\alpha = 3\beta$$
+Thus,  in this case: $$\alpha = 3\beta$$
 
 Clearly, $\beta$ must always be less than one. However, we also consider that employees who specify only a single priority shift have more weight placed on that shift than someone who prioritizes all but one shift.  We specify that a prioritized shift may be no more than twice as weighted as a non-weighted shift, thus $\alpha<1$.
 
@@ -66,11 +60,9 @@ Thus,
 
 $$\beta_{i} = \alpha \frac{\sum\limits_{j}Preference_{i,j}}{\sum\limits_{j}Availability_{i,j} - \sum\limits_{j}Preference_{i,j}}$$
 
-In addition, if $count(\beta_{i})=0$ or $count(\alpha_{i})=0$,
+In addition, if ${\sum\limits_{j}Availability_{i,j}=0$ or if ${\sum\limits_{j}Availability_{i,j} = {\sum\limits_{j}Preference_{i,j}$,
 $$ \beta_{i} = \alpha_{i} = 0 $$ 
 
-Thus, 
-$$ \alpha_{i}*count(\alpha_{i}) +\beta_{i} * count(\beta_{i}) = \sum\limits_{j}Availability_{i,j}$$
 
 The weighted preference matrix is this computed for each i:
 $$ WeightedPreference_{i,j} \begin{cases}
